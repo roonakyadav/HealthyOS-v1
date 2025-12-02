@@ -1,9 +1,11 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from '@/components/ui/sidebar'
 import { LogOut, Home, Users, Calendar, Clock, UserCog, Settings } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -15,6 +17,7 @@ const navigation = [
 ]
 
 function AppSidebarContent() {
+    const pathname = usePathname()
     const router = useRouter()
     const supabase = createSupabaseBrowserClient()
 
@@ -30,16 +33,19 @@ function AppSidebarContent() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarMenu>
-                    {navigation.map((item) => (
-                        <SidebarMenuItem key={item.name}>
-                            <SidebarMenuButton asChild>
-                                <Link href={item.href}>
-                                    <item.icon />
-                                    <span>{item.name}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
+                    {navigation.map((item) => {
+                        const isActive = pathname === item.href
+                        return (
+                            <SidebarMenuItem key={item.name}>
+                                <SidebarMenuButton asChild isActive={isActive}>
+                                    <Link href={item.href}>
+                                        <item.icon />
+                                        <span>{item.name}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        )
+                    })}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter className="p-4">

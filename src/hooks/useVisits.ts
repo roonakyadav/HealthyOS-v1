@@ -26,6 +26,7 @@ export function useTodayVisits() {
                 .from('visits')
                 .select(`
           *,
+          status,
           patient:patients(*),
           doctor:doctors(*)
         `)
@@ -33,12 +34,7 @@ export function useTodayVisits() {
                 .order('created_at', { ascending: true })
 
             if (error) throw error
-            // For now, assume all visits have status 'completed' since schema doesn't have it
-            // Todo: Will need to add status field
-            return data.map((visit: any) => ({
-                ...visit,
-                status: 'completed' as const, // Placeholder
-            })) as Visit[]
+            return data as Visit[]
         },
     })
 }
@@ -51,6 +47,7 @@ export function useVisit(id: string) {
                 .from('visits')
                 .select(`
           *,
+          status,
           patient:patients(*),
           doctor:doctors(*)
         `)
@@ -58,10 +55,7 @@ export function useVisit(id: string) {
                 .single()
 
             if (error) throw error
-            return {
-                ...data,
-                status: 'completed' as const, // Placeholder
-            } as Visit
+            return data as Visit
         },
         enabled: !!id,
     })
@@ -79,6 +73,7 @@ export function useCreateVisit() {
                     patient_id,
                     doctor_id,
                     date: today,
+                    status: 'waiting',
                     symptoms: '',
                     diagnosis: '',
                     prescription: '',
@@ -116,13 +111,11 @@ export function useUpdateVisitStatus() {
             notes?: string;
         }) => {
             const updateData: any = {}
+            if (status !== undefined) updateData.status = status
             if (symptoms !== undefined) updateData.symptoms = symptoms
             if (diagnosis !== undefined) updateData.diagnosis = diagnosis
             if (prescription !== undefined) updateData.prescription = prescription
             if (notes !== undefined) updateData.notes = notes
-
-            // Note: Since status is not in schema, we'll use notes for now or handle elsewhere
-            // This is a workaround for missing status column
 
             const { error } = await supabase
                 .from('visits')

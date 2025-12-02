@@ -43,12 +43,6 @@ export default function QueuePage() {
         },
     })
 
-    // Mock status assignment for demo since status not in DB
-    const visitsWithStatus: Visit[] = visits?.map((visit, index) => ({
-        ...visit,
-        status: (['waiting', 'in_progress', 'completed'] as Status[])[index % 3]
-    })) || []
-
     const onAddToQueue = async (data: { patient_id: string; doctor_id: string }) => {
         try {
             await createVisitMutation.mutateAsync(data)
@@ -197,7 +191,7 @@ export default function QueuePage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {!visitsWithStatus || visitsWithStatus.length === 0 ? (
+                    {!visits || visits.length === 0 ? (
                         <div className="text-center py-12">
                             <p className="text-muted-foreground">No visits scheduled for today.</p>
                         </div>
@@ -213,7 +207,7 @@ export default function QueuePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {visitsWithStatus.map((visit) => (
+                                {visits.map((visit) => (
                                     <TableRow key={visit.id}>
                                         <TableCell className="font-medium">
                                             <Link
@@ -229,9 +223,9 @@ export default function QueuePage() {
                                         <TableCell>
                                             <Badge
                                                 variant="secondary"
-                                                className={`${statusConfig[visit.status].bgColor} ${statusConfig[visit.status].color} hover:bg-secondary`}
+                                                className={`${statusConfig[visit.status as Status].bgColor} ${statusConfig[visit.status as Status].color} hover:bg-secondary`}
                                             >
-                                                {statusConfig[visit.status].label}
+                                                {statusConfig[visit.status as Status].label}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
@@ -247,10 +241,10 @@ export default function QueuePage() {
                                                         <Clock className="h-4 w-4" />
                                                     </Link>
                                                 </Button>
-                                                {getNextStatus(visit.status) && (
+                                                {getNextStatus(visit.status as Status) && (
                                                     <Button
                                                         size="sm"
-                                                        onClick={() => handleStatusUpdate(visit.id, visit.status, getNextStatus(visit.status)!)}
+                                                        onClick={() => handleStatusUpdate(visit.id, visit.status as Status, getNextStatus(visit.status as Status)!)}
                                                         disabled={updateStatusMutation.isPending}
                                                     >
                                                         <UserCheck className="mr-1 h-3 w-3" />

@@ -1,0 +1,60 @@
+export type Role = 'doctor' | 'admin' | 'patient';
+
+export type User = {
+    id: string;
+    email: string;
+    role: Role;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Patient = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    date_of_birth: string;
+    phone: string;
+    email?: string;
+    address: string;
+    emergency_contact: string;
+    medical_history?: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Doctor = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    specialization: string;
+    license_number: string;
+    phone: string;
+    email: string;
+    address: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Visit = {
+    id: string;
+    patient_id: string;
+    doctor_id: string;
+    date: string;
+    symptoms: string;
+    diagnosis: string;
+    prescription: string;
+    notes?: string;
+    created_at: string;
+};
+
+export type Appointment = {
+    id: string;
+    patient_id: string;
+    doctor_id: string;
+    date: string;
+    time: string;
+    status: 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
+    purpose: string;
+    notes?: string;
+    created_at: string;
+};

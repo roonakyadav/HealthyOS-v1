@@ -61,4 +61,16 @@ export type Appointment = {
     purpose: string;
     notes?: string;
     created_at: string;
+    // Relations (added in queries)
+    patient?: {
+        id: string;
+        first_name: string;
+        last_name: string;
+    };
+    doctor?: {
+        id: string;
+        first_name: string;
+        last_name: string;
+        specialization: string;
+    };
 };

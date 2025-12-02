@@ -40,11 +40,15 @@ export type Visit = {
     patient_id: string;
     doctor_id: string;
     date: string;
-    symptoms: string;
-    diagnosis: string;
-    prescription: string;
+    status: 'waiting' | 'in_progress' | 'completed';
+    symptoms?: string;
+    diagnosis?: string;
+    prescription?: string;
     notes?: string;
     created_at: string;
+    // Relations
+    patient?: Patient;
+    doctor?: Doctor;
 };
 
 export type Appointment = {

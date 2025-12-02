@@ -45,10 +45,39 @@ export type Visit = {
     diagnosis?: string;
     prescription?: string;
     notes?: string;
+    vitals?: {
+        bp?: string;
+        heart_rate?: number;
+        temperature?: number;
+        weight?: number;
+        spo2?: number;
+    };
     created_at: string;
     // Relations
     patient?: Patient;
     doctor?: Doctor;
+};
+
+export type Medication = {
+    id: string;
+    visit_id: string;
+    medicine_name: string;
+    dosage: string;
+    frequency: string;
+    duration: string;
+    notes?: string;
+    created_at: string;
+};
+
+export type Attachment = {
+    id: string;
+    visit_id: string;
+    filename: string;
+    file_path: string;
+    file_size: number;
+    mime_type: string;
+    uploaded_by: string;
+    created_at: string;
 };
 
 export type Appointment = {

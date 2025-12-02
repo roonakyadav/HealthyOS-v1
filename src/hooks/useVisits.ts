@@ -91,7 +91,7 @@ export function useCreateVisit() {
     })
 }
 
-export function useUpdateVisitStatus() {
+export function useUpdateVisit() {
     const queryClient = useQueryClient()
 
     return useMutation({
@@ -101,7 +101,8 @@ export function useUpdateVisitStatus() {
             symptoms,
             diagnosis,
             prescription,
-            notes
+            notes,
+            vitals
         }: {
             id: string;
             status?: string;
@@ -109,6 +110,7 @@ export function useUpdateVisitStatus() {
             diagnosis?: string;
             prescription?: string;
             notes?: string;
+            vitals?: any;
         }) => {
             const updateData: any = {}
             if (status !== undefined) updateData.status = status
@@ -116,6 +118,7 @@ export function useUpdateVisitStatus() {
             if (diagnosis !== undefined) updateData.diagnosis = diagnosis
             if (prescription !== undefined) updateData.prescription = prescription
             if (notes !== undefined) updateData.notes = notes
+            if (vitals !== undefined) updateData.vitals = vitals
 
             const { error } = await supabase
                 .from('visits')
@@ -127,5 +130,28 @@ export function useUpdateVisitStatus() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['visits'] })
         },
+    })
+}
+
+export function usePatientVisits(patientId: string) {
+    return useQuery({
+        queryKey: ['visits', 'patient', patientId],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('visits')
+                .select(`
+          *,
+          status,
+          patient:patients(*),
+          doctor:doctors(*)
+        `)
+                .eq('patient_id', patientId)
+                .order('date', { ascending: false })
+                .order('created_at', { ascending: false })
+
+            if (error) throw error
+            return data as Visit[]
+        },
+        enabled: !!patientId,
     })
 }

@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
-import { useTodayVisits, useCreateVisit, useUpdateVisitStatus } from '@/hooks/useVisits'
+import { useTodayVisits, useCreateVisit, useUpdateVisit } from '@/hooks/useVisits'
 import { usePatients } from '@/hooks/usePatients'
 import { useDoctors } from '@/hooks/useDoctors'
 import type { Visit } from '@/types'
@@ -34,7 +34,7 @@ export default function QueuePage() {
     const { data: patients } = usePatients()
     const { data: doctors } = useDoctors()
     const createVisitMutation = useCreateVisit()
-    const updateStatusMutation = useUpdateVisitStatus()
+    const updateStatusMutation = useUpdateVisit()
 
     const form = useForm({
         defaultValues: {
